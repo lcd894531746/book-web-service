@@ -3,7 +3,6 @@ package com.example.springboot.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.example.springboot.controller.request.BaseRequest;
-import com.example.springboot.controller.request.UserPageRequest;
 import com.example.springboot.entity.User;
 import com.example.springboot.mapper.UserMapper;
 import com.example.springboot.service.IUserService;
@@ -15,17 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service //注解  代表一个组件 供其他地方使用 标注在userservice  而不是在iuserservice
 public class UserService implements IUserService {
-
     @Autowired
     UserMapper userMapper;
 
+//    使用 ^+i 快速实现方法
     @Override
     public List<User> list() {
         return userMapper.list();
     }
-
     @Override
     public PageInfo<User> page(BaseRequest baseRequest) {
         PageHelper.startPage(baseRequest.getPageNum(), baseRequest.getPageSize());

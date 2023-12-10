@@ -6,20 +6,26 @@ import lombok.Data;
 public class Result {
     private static final String SUCCESS_CODE = "200";
     private static final String ERROR_CODE = "-1";
+    private static final Boolean SUCCESS_SUCCESS = true;
+    private static final Boolean ERROR_SUCCESS = false;
 
     private String code;
     private Object data;
+    private Boolean success;
     private String msg;
+
 
     public static Result success() {
         Result result = new Result();
         result.setCode(SUCCESS_CODE);
+        result.setSuccess(SUCCESS_SUCCESS);
         return result;
     }
 
     public static Result success(Object data) {
         Result result = new Result();
         result.setCode(SUCCESS_CODE);
+        result.setSuccess(SUCCESS_SUCCESS);
         result.setData(data);
         return result;
     }
@@ -27,6 +33,7 @@ public class Result {
     public static Result error(String msg) {
         Result result = new Result();
         result.setCode(ERROR_CODE);
+        result.setSuccess(ERROR_SUCCESS);
         result.setMsg(msg);
         return result;
     }

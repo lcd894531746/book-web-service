@@ -17,14 +17,34 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
+    /*
+     * 通过使用@Autowired注解，Spring框架会自动查找并将符合类型要求的实现类注入到adminService字段中。
+     * */
     @Autowired
     IAdminService adminService;
 
+
     @PostMapping("/login")
+    /*
+     *
+     * @RequestBody LoginRequest request表示该方法接受一个LoginRequest对象作为参数，并且该对象的数据将从HTTP请求的主体中提取出来。
+     *
+     * 通过定义LoginRequest类，我们可以在登录功能中使用它来接收用户的登录请求，将用户名和密码等信息封装到一个LoginRequest对象中，方便在代码中进行处理和验证。
+     * */
     public Result login(@RequestBody LoginRequest request) {
         LoginDTO login = adminService.login(request);
+
         return Result.success(login);
     }
+
+    ;
+
+//
+
+//    public Result login(@RequestBody LoginRequest request) {
+//        LoginDTO login = adminService.login(request);
+//        return Result.success(login);
+//    }
 
     @PutMapping("/password")
     public Result password(@RequestBody PasswordRequest request) {

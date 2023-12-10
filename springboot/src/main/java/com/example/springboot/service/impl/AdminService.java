@@ -24,7 +24,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class AdminService implements IAdminService {
+
+/*
+    implements关键字表示AdminService类实现了IAdminService接口，这意味着AdminService类需要提供接口中定义的所有方法的具体实现。
+ * */ public class AdminService implements IAdminService {
 
     @Autowired
     AdminMapper adminMapper;
@@ -33,6 +36,7 @@ public class AdminService implements IAdminService {
     private static final String PASS_SALT = "qingge";
 
     @Override
+
     public List<Admin> list() {
         return adminMapper.list();
     }
@@ -80,7 +84,9 @@ public class AdminService implements IAdminService {
     public LoginDTO login(LoginRequest request) {
         Admin admin = null;
         try {
+        //  接口 查询
             admin = adminMapper.getByUsername(request.getUsername());
+
         } catch (Exception e) {
             log.error("根据用户名{} 查询出错", request.getUsername());
             throw new ServiceException("用户名错误");
@@ -88,22 +94,24 @@ public class AdminService implements IAdminService {
         if (admin == null) {
             throw new ServiceException("用户名或密码错误");
         }
-        // 判断密码是否合法
+        //    校验密码是否正确 把当前的密码明文使用md5 加密之后 得到的加密 于admin 里面的密码进行比较
+        //    @Override是Java中的一个注解，用于标识一个方法是覆盖（或重写）父类中的方法。 只能用于子类中
+        //    当一个子类继承自父类并且定义了一个与父类中的方法具有相同名称、参数列表和返回类型的方法时，我们称子类中的方法覆盖了父类中的方法。为了确保子类中的方法确实是对父类方法的覆盖，我们可以在子类方法上添加@Override注解。
         String securePass = securePass(request.getPassword());
-        if (!securePass.equals(admin.getPassword())) {
-            throw new ServiceException("用户名或密码错误");
-        }
-        if (!admin.isStatus()) {
-            throw new ServiceException("当前用户处于禁用状态，请联系管理员");
+        String user = admin.getPassword();
+        if (!user.equals(securePass)) {
+            throw new ServiceException("密码错误");
         }
         LoginDTO loginDTO = new LoginDTO();
+        //  把admin 的属性结构到  loginDTO
         BeanUtils.copyProperties(admin, loginDTO);
-
         // 生成token
         String token = TokenUtils.genToken(String.valueOf(admin.getId()), admin.getPassword());
         loginDTO.setToken(token);
         return loginDTO;
     }
+
+    ;
 
     @Override
     public void changePass(PasswordRequest request) {

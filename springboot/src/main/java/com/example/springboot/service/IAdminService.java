@@ -9,6 +9,10 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
+
+
+
+//业务数据处理
 public interface IAdminService {
 
     List<Admin> list();
@@ -23,7 +27,14 @@ public interface IAdminService {
 
     void deleteById(Integer id);
 
-    LoginDTO login(LoginRequest request);
+    LoginDTO  login(LoginRequest request);
+
+
+
+
+
+
+//    LoginDTO login(LoginRequest request);
 
     void changePass(PasswordRequest request);
 
