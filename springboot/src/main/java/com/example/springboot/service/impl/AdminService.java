@@ -24,10 +24,10 @@ import java.util.List;
 
 @Slf4j
 @Service
-
 /*
     implements关键字表示AdminService类实现了IAdminService接口，这意味着AdminService类需要提供接口中定义的所有方法的具体实现。
- * */ public class AdminService implements IAdminService {
+ *  以下是具体的实现  IAdminService是接口
+ */ public class AdminService implements IAdminService {
 
     @Autowired
     AdminMapper adminMapper;

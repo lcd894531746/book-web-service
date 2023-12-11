@@ -7,6 +7,8 @@ import com.example.springboot.controller.request.LoginRequest;
 import com.example.springboot.controller.request.PasswordRequest;
 import com.example.springboot.entity.Admin;
 import com.example.springboot.service.IAdminService;
+import com.example.springboot.service.IUserService;
+import com.example.springboot.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +24,8 @@ public class AdminController {
      * */
     @Autowired
     IAdminService adminService;
-
+    @Autowired
+    IUserService userService;
 
     @PostMapping("/login")
     /*
@@ -32,19 +35,17 @@ public class AdminController {
      * 通过定义LoginRequest类，我们可以在登录功能中使用它来接收用户的登录请求，将用户名和密码等信息封装到一个LoginRequest对象中，方便在代码中进行处理和验证。
      * */
     public Result login(@RequestBody LoginRequest request) {
-        LoginDTO login = adminService.login(request);
-
+//        区分 管理员 还是普通用户  管理员 账号是admin/admin1
+        LoginDTO login = null;
+        if (request.getUsername().contains("admin")) {
+            login = adminService.login(request);
+        } else {
+            login = userService.login(request);
+        }
         return Result.success(login);
     }
 
     ;
-
-//
-
-//    public Result login(@RequestBody LoginRequest request) {
-//        LoginDTO login = adminService.login(request);
-//        return Result.success(login);
-//    }
 
     @PutMapping("/password")
     public Result password(@RequestBody PasswordRequest request) {

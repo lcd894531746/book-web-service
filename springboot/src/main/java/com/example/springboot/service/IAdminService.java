@@ -12,7 +12,7 @@ import java.util.List;
 
 
 
-//业务数据处理
+//这里是接口 不是具体的实现
 public interface IAdminService {
 
     List<Admin> list();
@@ -28,13 +28,6 @@ public interface IAdminService {
     void deleteById(Integer id);
 
     LoginDTO  login(LoginRequest request);
-
-
-
-
-
-
-//    LoginDTO login(LoginRequest request);
 
     void changePass(PasswordRequest request);
 

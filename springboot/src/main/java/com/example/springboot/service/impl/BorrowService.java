@@ -114,33 +114,33 @@ public class BorrowService implements IBorrowService {
     public void saveRetur(Retur obj) {
         // 改状态
         obj.setStatus("已归还");
-        borrowMapper.updateStatus("已归还", obj.getId());  // obj.getId() 是前端传来的借书id
-//        obj.setId(null);  // 新数据
-        obj.setRealDate(LocalDate.now());
-        borrowMapper.saveRetur(obj);
-
-        // 图书数量增加
-        bookMapper.updateNumByNo(obj.getBookNo());
-
-        // 返还和扣除用户积分
-        Book book = bookMapper.getByNo(obj.getBookNo());
-        if (book != null) {
-            long until = 0;
-            if (obj.getRealDate().isBefore(obj.getReturnDate())) {
-                until = obj.getRealDate().until(obj.getReturnDate(), ChronoUnit.DAYS);
-            } else if (obj.getRealDate().isAfter(obj.getReturnDate())) {  // 逾期归还，要扣额外的积分
-                until = -obj.getReturnDate().until(obj.getRealDate(), ChronoUnit.DAYS);
-            }
-            int score = (int) until * book.getScore();  // 获取待归还的积分
-            User user = userMapper.getByUsername(obj.getUserNo());
-            int account = user.getAccount() + score;
-            user.setAccount(account);
-            if (account < 0) {
-                // 锁定账号
-                user.setStatus(false);
-            }
-            userMapper.updateById(user);
-        }
+//        borrowMapper.updateStatus("已归还", obj.getId());  // obj.getId() 是前端传来的借书id
+////        obj.setId(null);  // 新数据
+//        obj.setRealDate(LocalDate.now());
+//        borrowMapper.saveRetur(obj);
+//
+//        // 图书数量增加
+//        bookMapper.updateNumByNo(obj.getBookNo());
+//
+//        // 返还和扣除用户积分
+//        Book book = bookMapper.getByNo(obj.getBookNo());
+//        if (book != null) {
+//            long until = 0;
+//            if (obj.getRealDate().isBefore(obj.getReturnDate())) {
+//                until = obj.getRealDate().until(obj.getReturnDate(), ChronoUnit.DAYS);
+//            } else if (obj.getRealDate().isAfter(obj.getReturnDate())) {  // 逾期归还，要扣额外的积分
+//                until = -obj.getReturnDate().until(obj.getRealDate(), ChronoUnit.DAYS);
+//            }
+//            int score = (int) until * book.getScore();  // 获取待归还的积分
+//            User user = userMapper.getByUsername(obj.getUserNo());
+//            int account = user.getAccount() + score;
+//            user.setAccount(account);
+//            if (account < 0) {
+//                // 锁定账号
+//                user.setStatus(false);
+//            }
+//            userMapper.updateById(user);
+//        }
     }
 
     @Override

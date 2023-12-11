@@ -2,12 +2,17 @@ package com.example.springboot.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.example.springboot.controller.dto.LoginDTO;
 import com.example.springboot.controller.request.BaseRequest;
+import com.example.springboot.controller.request.LoginRequest;
 import com.example.springboot.entity.User;
+import com.example.springboot.exception.ServiceException;
 import com.example.springboot.mapper.UserMapper;
 import com.example.springboot.service.IUserService;
+import com.example.springboot.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,11 +24,39 @@ public class UserService implements IUserService {
     @Autowired
     UserMapper userMapper;
 
-//    使用 ^+i 快速实现方法
+    @Override
+    public LoginDTO login(LoginRequest request) {
+
+        User user = null;
+        try {
+            user = userMapper.getByUsername(request.getUsername());
+        } catch (Exception e) {
+        }
+        ;
+
+        if (user == null) {
+            throw new ServiceException("账号错误");
+        }
+
+        String password = user.getPassword();
+        if (!password.equals(request.getPassword())){
+            throw  new ServiceException("密码错误");
+        }
+
+        LoginDTO  loginDTO=new  LoginDTO();
+        BeanUtils.copyProperties(user,loginDTO);
+
+        String token= TokenUtils.genToken(String.valueOf(user.getId()),user.getUsername());
+        loginDTO.setToken(token);
+        return loginDTO;
+    }
+
+    //    使用 ^+i 快速实现方法
     @Override
     public List<User> list() {
         return userMapper.list();
     }
+
     @Override
     public PageInfo<User> page(BaseRequest baseRequest) {
         PageHelper.startPage(baseRequest.getPageNum(), baseRequest.getPageSize());
