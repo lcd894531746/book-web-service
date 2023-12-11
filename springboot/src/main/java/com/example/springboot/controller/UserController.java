@@ -4,6 +4,7 @@ import com.example.springboot.common.Result;
 import com.example.springboot.controller.request.UserPageRequest;
 import com.example.springboot.entity.User;
 import com.example.springboot.service.IUserService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,13 @@ public class UserController {
         return Result.success(users);
     }
 
-    @GetMapping("/page")
-    public Result page(UserPageRequest userPageRequest) {
-        return Result.success(userService.page(userPageRequest));
-    }
 
+    /*
+     * 分页查询
+     * */
+    @GetMapping("/page")
+    public  Result page(UserPageRequest userPageRequest){
+      PageInfo<User> data= userService.page(userPageRequest);
+        return  Result.success(data);
+    };
 }

@@ -6,8 +6,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.springboot.entity.Admin;
+import com.example.springboot.entity.User;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.service.IAdminService;
+import com.example.springboot.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,9 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Autowired
     private IAdminService adminService;
+    @Autowired
+    private IUserService userService;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -36,22 +41,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(token)) {
             throw new ServiceException(ERROR_CODE_401, "无token，请重新登录");
         }
-        // 获取 token 中的adminId
-        String adminId;
+        // 获取 token 中的id
+        String id;
+        String userName;
         Admin admin;
+        User user;
         try {
-            adminId = JWT.decode(token).getAudience().get(0);
+            id = JWT.decode(token).getAudience().get(0);
             // 根据token中的userid查询数据库
-            admin = adminService.getById(Integer.parseInt(adminId));
+            admin = adminService.getById(Integer.parseInt(id));
+            user = userService.getById(Integer.parseInt(id));
         } catch (Exception e) {
             String errMsg = "token验证失败，请重新登录";
             log.error(errMsg + ", token=" + token, e);
             throw new ServiceException(ERROR_CODE_401, errMsg);
         }
-        if (admin == null) {
+
+        if (user == null && admin == null) {
             throw new ServiceException(ERROR_CODE_401, "用户不存在，请重新登录");
         }
-
         try {
             // 用户密码加签验证 token
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(admin.getPassword())).build();

@@ -3,8 +3,8 @@ package com.example.springboot.service.impl;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import com.example.springboot.controller.dto.LoginDTO;
-import com.example.springboot.controller.request.BaseRequest;
 import com.example.springboot.controller.request.LoginRequest;
+import com.example.springboot.controller.request.UserPageRequest;
 import com.example.springboot.entity.User;
 import com.example.springboot.exception.ServiceException;
 import com.example.springboot.mapper.UserMapper;
@@ -31,6 +31,8 @@ public class UserService implements IUserService {
         try {
             user = userMapper.getByUsername(request.getUsername());
         } catch (Exception e) {
+//
+            throw new ServiceException("账号错误");
         }
         ;
 
@@ -39,14 +41,14 @@ public class UserService implements IUserService {
         }
 
         String password = user.getPassword();
-        if (!password.equals(request.getPassword())){
-            throw  new ServiceException("密码错误");
+        if (!password.equals(request.getPassword())) {
+            throw new ServiceException("密码错误");
         }
 
-        LoginDTO  loginDTO=new  LoginDTO();
-        BeanUtils.copyProperties(user,loginDTO);
+        LoginDTO loginDTO = new LoginDTO();
+        BeanUtils.copyProperties(user, loginDTO);
 
-        String token= TokenUtils.genToken(String.valueOf(user.getId()),user.getUsername());
+        String token = TokenUtils.genToken(String.valueOf(user.getId()), user.getPassword());
         loginDTO.setToken(token);
         return loginDTO;
     }
@@ -58,11 +60,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public PageInfo<User> page(BaseRequest baseRequest) {
-        PageHelper.startPage(baseRequest.getPageNum(), baseRequest.getPageSize());
-        List<User> users = userMapper.listByCondition(baseRequest);
+
+    public PageInfo page(UserPageRequest userPageRequest) {
+        // listByCondition 条件查询  需要传递两个参数 页码 大小
+        PageHelper.startPage(userPageRequest.getPageNum(), userPageRequest.getPageSize());
+        List<User> users = userMapper.listByCondition(userPageRequest);
         return new PageInfo<>(users);
     }
+
+    ;
 
     @Override
     public void save(User user) {

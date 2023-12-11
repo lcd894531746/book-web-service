@@ -13,7 +13,6 @@ public interface IUserService {
 
     List<User> list();
 
-    PageInfo<User> page(BaseRequest baseRequest);
 
     void save(User user);
 
@@ -26,5 +25,7 @@ public interface IUserService {
     void handleAccount(User user);
 
     LoginDTO login(LoginRequest request);
+
+    PageInfo page(UserPageRequest userPageRequest);
 
 }

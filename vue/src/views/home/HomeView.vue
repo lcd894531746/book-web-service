@@ -91,6 +91,11 @@ const option = {
           this.lineBox = echarts.init(document.getElementById('line'))
         }
         request.get('/borrow/lineCharts/' + this.timeRange).then(res => {
+          const {success, data}=res
+          if(!success){
+            this.$message.error('获取图书借还统计失败')
+            return
+          }
           option.xAxis.data = res.data.date
           option.series[0].data = res.data.borrow
           option.series[1].data = res.data.retur
