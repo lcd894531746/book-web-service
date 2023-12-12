@@ -56,13 +56,12 @@ public class UserController {
         return Result.success(users);
     }
 
-
     /*
      * 分页查询
      * */
     @GetMapping("/page")
-    public  Result page(UserPageRequest userPageRequest){
-      PageInfo<User> data= userService.page(userPageRequest);
-        return  Result.success(data);
-    };
+    public Result page(UserPageRequest userPageRequest) {
+        PageInfo data=userService.page(userPageRequest);
+        return Result.success(data);
+    }
 }

@@ -15,15 +15,18 @@
       <el-table-column prop="age" label="年龄"></el-table-column>
       <el-table-column prop="address" label="地址"></el-table-column>
       <el-table-column prop="phone" label="联系方式"></el-table-column>
-      <el-table-column prop="sex" label="性别"></el-table-column>
+      <el-table-column prop="sex" label="性别">
+        <template v-slot="{row}">
+          <el-tag :type="row.sex == 'M'?'success' : 'danger'">
+            {{row.sex == 'M'? '男' : '女'}}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="account" label="账户积分"></el-table-column>
       <el-table-column label="状态" width="230">
         <template v-slot="scope">
-          <el-switch
-              v-model="scope.row.status"
-              @change="changeStatus(scope.row)"
-              active-color="#13ce66"
-              inactive-color="#ff4949">
+          <el-switch v-model="scope.row.status" @change="changeStatus(scope.row)" active-color="#13ce66"
+            inactive-color="#ff4949">
           </el-switch>
         </template>
       </el-table-column>
@@ -32,14 +35,10 @@
 
       <el-table-column label="操作" width="230">
         <template v-slot="scope">
-<!--          scope.row 就是当前行数据-->
+          <!--          scope.row 就是当前行数据-->
           <el-button type="warning" @click="handleAccountAdd(scope.row)">充值</el-button>
           <el-button type="primary" @click="$router.push('/editUser?id=' + scope.row.id)">编辑</el-button>
-          <el-popconfirm
-              style="margin-left: 5px"
-              title="您确定删除这行数据吗？"
-              @confirm="del(scope.row.id)"
-          >
+          <el-popconfirm style="margin-left: 5px" title="您确定删除这行数据吗？" @confirm="del(scope.row.id)">
             <el-button type="danger" slot="reference">删除</el-button>
           </el-popconfirm>
         </template>
@@ -48,13 +47,8 @@
 
     <!--    分页-->
     <div style="margin-top: 20px">
-      <el-pagination
-          background
-          :current-page="params.pageNum"
-          :page-size="params.pageSize"
-          layout="prev, pager, next"
-          @current-change="handleCurrentChange"
-          :total="total">
+      <el-pagination background :current-page="params.pageNum" :page-size="params.pageSize" layout="prev, pager, next"
+        @current-change="handleCurrentChange" :total="total">
       </el-pagination>
     </div>
 
@@ -102,8 +96,8 @@ export default {
       form: {},
       rules: {
         score: [
-          { required: true, message: '请输入积分', trigger: 'blur'},
-          { validator: checkNums, trigger: 'blur'}
+          { required: true, message: '请输入积分', trigger: 'blur' },
+          { validator: checkNums, trigger: 'blur' }
         ]
       }
     }
@@ -184,6 +178,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

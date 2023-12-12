@@ -25,4 +25,5 @@ public interface UserMapper {
     User getByUsername(String username);
 
     List<User> listByCondition(UserPageRequest userPageRequest);
+
 }

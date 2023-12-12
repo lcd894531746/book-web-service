@@ -53,22 +53,19 @@ public class UserService implements IUserService {
         return loginDTO;
     }
 
+    @Override
+    public PageInfo page(UserPageRequest userPageRequest) {
+        PageHelper.startPage(userPageRequest.getPageNum(), userPageRequest.getPageSize());
+        List<User> users = userMapper.listByCondition(userPageRequest);
+        return new PageInfo<>(users);
+    }
+
     //    使用 ^+i 快速实现方法
     @Override
     public List<User> list() {
         return userMapper.list();
     }
 
-    @Override
-
-    public PageInfo page(UserPageRequest userPageRequest) {
-        // listByCondition 条件查询  需要传递两个参数 页码 大小
-        PageHelper.startPage(userPageRequest.getPageNum(), userPageRequest.getPageSize());
-        List<User> users = userMapper.listByCondition(userPageRequest);
-        return new PageInfo<>(users);
-    }
-
-    ;
 
     @Override
     public void save(User user) {
